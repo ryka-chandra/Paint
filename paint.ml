@@ -14,7 +14,6 @@ type point = position  (* from Gctx *)
     picture that the user has drawn, as well as any other "visible" elements
     that must show up in the canvas area (e.g. a "selection rectangle"). At
     the start of the homework, the only available shape is a line.  *)
-(* TODO: You will modify this definition in Tasks 3, 4, 5 and maybe 6. *)
 type shape = 
   | Line of {color: color; p1: point; p2: point; thickness: int}
   | Points of { color: Gctx.color; points: point list; thickness: int}
@@ -33,7 +32,6 @@ type shape =
       - LineEndMode means that the paint program is waiting for the user's
         second click. The point associated with this mode stores the location
         of the user's first mouse click.  *)
-(* TODO: You will need to modify this type in Tasks 3 and 4, and maybe 6. *)
 type mode = 
   | LineStartMode
   | LineEndMode of point
@@ -55,8 +53,6 @@ type state = {
   mutable color : color;
 
   mutable thickness : int
-  (* TODO: You will need to add new state for Tasks 2, 5, and *)
-  (* possibly 6 *) 
 }
 
 (** Initial values of the program state. *)
@@ -65,16 +61,13 @@ let paint : state = {
   mode = LineStartMode;
   color = black;
   preview = None;
-  thickness = 1
-  (* TODO: You will need to add new state for Tasks 2, 5, and maybe 6 *)
-  
+  thickness = 1  
 }
 
 
 
 (** This function creates a graphics context with the appropriate
     pen color. *)
-(* TODO: Your will need to modify this function in Task 5 *)
 let with_params (g: gctx) (c: color) (thickness: int) : gctx =
   let g = with_color g c in
   with_thickness g thickness
@@ -91,10 +84,6 @@ let with_params (g: gctx) (c: color) (thickness: int) : gctx =
     correctly) and uses the Gctx.draw_xyz functions to display them on the
     canvas.  *)
 
-(* TODO: You will need to modify this repaint function in Tasks 2, 3,
-   4, and possibly 5 or 6. For example, if the user is performing some
-   operation that provides "preview" (see Task 2) the repaint function
-   must also show the preview. *)
 let repaint (g: gctx) : unit =
   let draw_shape (s: shape) : unit =
     begin match s with
@@ -128,7 +117,6 @@ let ((paint_canvas : widget), (paint_canvas_controller : notifier_controller)) =
 
 (** The paint_action function processes all events that occur
     in the canvas region. *)
-(* TODO: Tasks 2, 3, 4, 5, and 6 involve changes to paint_action. *)
 let paint_action (gc:gctx) (event:event) : unit =
   let p  = event_pos event gc in  (* mouse position *)
   begin match (event_type event) with
@@ -214,18 +202,6 @@ let paint_action (gc:gctx) (event:event) : unit =
 (** This part of the program creates the other widgets for the paint
     program -- the buttons, color selectors, etc., and lays them out
     in the top - level window. *)
-(* TODO: Tasks 1, 4, 5, and 6 involve adding new buttons or changing
-   the layout of the Paint GUI. Initially the layout is ugly because
-   we use only the hpair widget demonstrated in Lecture. Task 1 is to
-   make improvements to make the layout more appealing. You may choose
-   to arrange the buttons and other GUI elements of the paint program
-   however you like (so long as it is easily apparent how to use the
-   interface).  The sample screenshot of our solution shows one
-   possible design.  Also, feel free to improve the visual components
-   of the GUI; for example, our solution puts borders around the
-   buttons and uses a custom "color button" that changes its
-   appearance based on whether or not the color is currently
-   selected. *)
 
 (** Create the Undo button *)
 let (w_undo, lc_undo, nc_undo) = button "Undo"
@@ -235,8 +211,6 @@ let (w_ellipse, lc_ellipse, nc_ellipse) = button "ellipse"
 
 (** This function runs when the Undo button is clicked.
     It simply removes the last shape from the shapes deque. *)
-(* TODO: You need to modify this in Task 3 and 4, and potentially 2
-   (depending on your implementation). *)
 
 let undo () : unit =
   if Deque.is_empty paint.shapes then () else
@@ -275,9 +249,7 @@ let (label_slider, _) = label "redness"
                                   let r = x * 256 / 100 in
                                   paint.color <- {paint.color with r = r})
 
-(** The mode toolbar, initially containing just the Undo button.
-    TODO: you will need to modify this widget to add more buttons
-    to the toolbar in Task 1, Tasks 5, and possibly 6. *)
+(** The mode toolbar, initially containing just the Undo button. *)
 let mode_toolbar : widget = hlist [border w_undo; spacer;
   border w_line; spacer; border w_point; spacer; border w_ellipse; spacer;
   w_thick; spacer; border (hpair label_slider w_slider)]
@@ -313,8 +285,6 @@ let color_button (c: color) : widget =
 
 (** The color selection toolbar. Contains the color indicator and
     buttons for several different colors. *)
-(* TODO: Task 1 - This code contains a great deal of boilerplate.  You
-     should come up with a better, more elegant, more concise solution... *)
 let color_list = [black; white; red; green; blue; yellow; cyan; magenta]
 
 let color_buttons = List.map (fun x -> color_button x) color_list
@@ -327,8 +297,6 @@ let color_toolbar : widget =
 
 (** The top-level paint program widget: a combination of the
     mode_toolbar, the color_toolbar and the paint_canvas widgets. *)
-(* TODO: Task 1 (and others) involve modifing this layout to add new
-   buttons and make the layout more aesthetically appealing. *)
 let paint_widget =
   vlist [paint_canvas; spacer; mode_toolbar; spacer; color_toolbar]
 
