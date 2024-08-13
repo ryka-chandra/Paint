@@ -77,9 +77,7 @@ let hpair (w1:widget) (w2:widget) : widget = {
 }
 
 (** The vpair widget lays out two widgets vertically, aligned at their
-    left edges.
-
-   TODO: You will implement vpair in Task 1. *)
+    left edges.*)
 let vpair (w1: widget) (w2: widget) : widget = {
   repaint = (fun (g: Gctx.gctx) ->
       let (_, y1) = w1.size () in
@@ -108,7 +106,6 @@ let vpair (w1: widget) (w2: widget) : widget = {
    a fold_left function. You may want to think about what this does,
    and how it's different from the fold you're used to.  *)
 
-(* TODO: You will implement list_layout in Task 1. *)
 let list_layout (pair: widget -> widget -> widget)
          (ws: widget list) : widget =
   List.fold_right (fun x acc -> pair x acc) ws (space (0, 0)) 
@@ -248,8 +245,6 @@ let canvas (dim: Gctx.dimension) (f : Gctx.gctx -> unit)
 (*****************************************)
 (**              Checkbox                *)
 (*****************************************)
-(* TODO: Task 5 requires you to develop a checkbox widget *)
-
 
 (** A checkbox is a controller for a boolean value associated with a widget.
    Other widgets might store other data -- a slider might store an integer, for
@@ -270,10 +265,6 @@ type 'a value_controller = {
   change_value        : 'a -> unit
 }
 
-(** TODO: The first part of task 5 requires you to implement the following
-    generic function. This function takes a value of type 'a and returns a
-    value controller for it. Carefully consider what state needs to be
-    associated with any value controller. *)
 let make_controller (v: 'a) : 'a value_controller = 
   let current_value = ref v in
   let listeners = ref [] in
@@ -293,28 +284,6 @@ let update_value (vc : 'a value_controller) (f : 'a -> 'a) : unit =
   let v = vc.get_value () in
   vc.change_value (f v)
 
-(** TODO: Finally, we can assemble a checkbox widget by re-using our previously
-    defined components.  A checkbox is a label, a canvas, notifier, and value
-    controller that are laid out visually using hpair and "wired together"
-    by installing the appropriate mouseclick_listener.
-
-
-    For some inspiration about how to implement this checkbox widget by
-    composing together functionality from other widgets, please take a look at
-    the lighbulb.ml demo from lecture.
-    
-    Don't forget to use make_controller function you defined above when
-    implementing the checkbox, and our provided update_value helper can also
-    be of use.
-
-    If your checkbox implementation does not work, do _not_ comment it
-    out, because your code will not compile upon submission. Instead,
-    you can replace the function body with
-    
-      failwith "Checkbox: unimplemented"
-    
-    before submitting your code.
-    *)
 let checkbox (init: bool) (s: string) : widget * bool value_controller =
   let value = make_controller init in
   let (w, _) = label s in
@@ -334,13 +303,6 @@ let checkbox (init: bool) (s: string) : widget * bool value_controller =
 (**          Additional widgets          *)
 (*****************************************)
 
-(** TODO: In Task 6 you may choose to add a radio_button widget, a slider, or
-   (after discussing your idea with course staff via a private Ed post) some
-   other widget of your choice.  The simplest way to approach this problem
-   is to build a new widget by composing from more primitive widgets.  For
-   example, a slider can also be built from a value controller and a canvas,
-   suitably connected.
-*)
 
 (* This slider applies a red color to each selected color button *)
 
