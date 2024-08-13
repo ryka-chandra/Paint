@@ -97,15 +97,6 @@ let vpair (w1: widget) (w2: widget) : widget = {
       (max x1 x2, y1 + y2));
   }
 
-(* TIP: the OCaml List module provides a function fold_right
-   (List.fold_right) that behaves like the "fold" function we've seen
-   on previous homeworks except that it takes its arguments in a
-   different order.
-
-   Also, if you look at the List interface, you will see that there is
-   a fold_left function. You may want to think about what this does,
-   and how it's different from the fold you're used to.  *)
-
 let list_layout (pair: widget -> widget -> widget)
          (ws: widget list) : widget =
   List.fold_right (fun x acc -> pair x acc) ws (space (0, 0)) 
@@ -118,13 +109,6 @@ let vlist (ws: widget list) : widget = list_layout vpair ws
 (**       Label Widgets      *)
 (*****************************)
 
-(* Throughout the paint program, we will find the need to associate some value
-   with a widget, and also to provide a way to update that value. The simplest
-   example of this is a label widget, where the value we're dealing with is a
-   string (which is displayed by the label).
-
-   Because both the widget and the label_controller share the same, mutable
-   value, the constructor must create both together.  *)
 
 (** A record of functions that allows us to read and write the string
     associated with a label. *)
@@ -151,14 +135,9 @@ let label (s: string) : widget * label_controller =
 (*****************************************)
 
 (** An event listener processes events as they "flow" through the widget
-    hierarchy.
-
-    The file notifierdemo.ml in the GUI demo project gives a longer
-    explanation of what notifiers and event_listeners are. *)
+    hierarchy. *)
 
 type event_listener = Gctx.gctx -> Gctx.event -> unit
-
-(* Below we define two special forms of event_listeners. *)
 
 (** Performs an action upon receiving a mouse click. *)
 let mouseclick_listener (action: unit -> unit) : event_listener =
@@ -254,11 +233,7 @@ let canvas (dim: Gctx.dimension) (f : Gctx.gctx -> unit)
    value. This controller can read (via get_value) and write the value (via
    change_value). It also allows change listeners to be registered by the
    application. All of the added listeners are triggered whenever this value is
-   changed.
-
-   We will use this value_controller as part of the checkbox implementation, and
-   you are free to use it (if needed) for whatever widget you create in
-   Task 6. *)
+   changed. *)
 type 'a value_controller = {
   add_change_listener : ('a -> unit) -> unit;
   get_value           : unit -> 'a;
@@ -278,7 +253,7 @@ let make_controller (v: 'a) : 'a value_controller =
 (** Once we have a notion of value controller, it is handy to have a
     helper function that can be used to update the value stored by
     the value controller (which will, in turn, trigger any associated
-    listeners). We've defined this helper function for you.
+    listeners).
 *)
 let update_value (vc : 'a value_controller) (f : 'a -> 'a) : unit =
   let v = vc.get_value () in
